@@ -7,7 +7,8 @@ import { APPS } from './apps'
 import Taskbar   from './components/Taskbar/Taskbar'
 import StartMenu from './components/StartMenu/StartMenu'
 import Window    from './components/Window/Window'
-import DesktopIcons from './components/DesktopIcons/DesktopIcons'
+import DesktopIcons     from './components/DesktopIcons/DesktopIcons'
+import DesktopSelection from './components/DesktopSelection/DesktopSelection'
 
 import InternetExplorer   from './apps/InternetExplorer'
 import WindowsExplorer    from './apps/WindowsExplorer'
@@ -54,7 +55,8 @@ let _nextId = 1
 function App() {
   const [startOpen, setStartOpen] = useState(false)
   const [windows,   setWindows]   = useState([])
-  const topZ = useRef(100)   // windows live in 100-8999, taskbar 9999, start menu 9998
+  const topZ       = useRef(100)
+  const desktopRef = useRef(null)   // windows live in 100-8999, taskbar 9999, start menu 9998
 
   // Open or restore/focus an app
   const openApp = (appId) => {
@@ -160,7 +162,10 @@ function App() {
 
   return (
     <DndProvider backend={HTML5Backend}>
-    <div className="win7-desktop" onClick={() => setStartOpen(false)}>
+    <div ref={desktopRef} className="win7-desktop" onClick={() => setStartOpen(false)}>
+
+      {/* ── Desktop selection box ── */}
+      <DesktopSelection containerRef={desktopRef} />
 
       {/* ── Desktop icons ── */}
       <DesktopIcons onAppOpen={openApp} />
