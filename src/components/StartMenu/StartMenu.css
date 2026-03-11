@@ -1,0 +1,293 @@
+﻿/* Win7 Start Menu */
+
+/* Outer wrapper — provides the glass border frame */
+#start-menu-wrap {
+  position: absolute;
+  bottom: 40px;
+  left: 0;
+  width: 420px;
+  z-index: 9998;
+  padding: 5px;
+  border-radius: 8px 8px 0 0;
+  overflow: hidden;
+  box-shadow:
+    0 0 0 1px rgba(0, 40, 100, 0.95),
+    0 8px 32px rgba(0,0,0,0.7);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+/* Dark tint overlay (blur now handled by backdrop-filter on wrapper) */
+#sm-border-blur {
+  position: absolute;
+  top: 0; right: 0; bottom: 0; left: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0,0,0,0.25) 0%,
+    rgba(0,0,0,0.40) 100%
+  );
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Inner content container */
+#start-menu {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  border-radius: 4px 4px 0 0;
+  overflow: hidden;
+}
+
+/*  Embedded avatar at top of right panel  */
+#sm-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.15);
+}
+
+#sm-avatar img {
+  width: 64px;
+  height: 64px;
+  object-fit: cover;
+  border: 3px solid rgba(200, 220, 255, 0.85);
+  border-radius: 4px;
+  box-shadow:
+    0 2px 6px rgba(0,0,0,0.4),
+    inset 0 0 0 1px rgba(255,255,255,0.15);
+}
+
+/*  Left white panel  */
+#sm-left {
+  width: 230px;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(to bottom, #fff 0%, #f4f4f4 100%);
+  flex-shrink: 0;
+  overflow: hidden;
+  border-radius: 3px 0 0 0;
+}
+
+/* Pinned apps list */
+#sm-apps {
+  flex: 1;
+  overflow-y: auto;
+  padding: 6px 0;
+}
+
+#sm-apps::-webkit-scrollbar { width: 4px; }
+#sm-apps::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 2px; }
+
+.sm-app-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 14px;
+  cursor: pointer;
+  color: #1a1a1a;
+  font-size: 12px;
+  border: 1px solid transparent;
+  margin: 0 4px;
+  border-radius: 3px;
+  transition: background 0.08s, border-color 0.08s, box-shadow 0.08s;
+}
+
+.sm-app-item:hover {
+  background: linear-gradient(
+    to bottom,
+    rgba(140,195,245,0.45) 0%,
+    rgba(80,155,230,0.30) 40%,
+    rgba(50,120,210,0.35) 100%
+  );
+  border-color: rgba(120,180,240,0.6);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.5),
+    inset 0 -1px 0 rgba(0,0,0,0.06),
+    0 0 6px rgba(100,170,255,0.3);
+}
+
+.sm-app-icon {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+/* All Programs */
+#sm-all-programs {
+  padding: 8px 14px;
+  color: #1a1a1a;
+  font-size: 12px;
+  cursor: pointer;
+  border-top: 1px solid #d8d8d8;
+  border: 1px solid transparent;
+  border-top: 1px solid #d8d8d8;
+  margin: 0 4px;
+  border-radius: 3px;
+  transition: background 0.08s, border-color 0.08s, box-shadow 0.08s;
+}
+
+#sm-all-programs:hover {
+  background: linear-gradient(
+    to bottom,
+    rgba(140,195,245,0.45) 0%,
+    rgba(80,155,230,0.30) 40%,
+    rgba(50,120,210,0.35) 100%
+  );
+  border-color: rgba(120,180,240,0.6);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.5),
+    inset 0 -1px 0 rgba(0,0,0,0.06),
+    0 0 6px rgba(100,170,255,0.3);
+}
+
+/* Search bar */
+#sm-search-wrap {
+  display: flex;
+  align-items: center;
+  padding: 6px 8px;
+  background: linear-gradient(to bottom, #dce6f4 0%, #c8d8ee 100%);
+  border-top: 1px solid #b0c0d8;
+}
+
+#sm-search {
+  flex: 1;
+  background: #fff;
+  border: 1px solid #7a9ec0;
+  border-radius: 0;
+  padding: 4px 8px;
+  font-size: 12px;
+  color: #1a1a1a;
+  outline: none;
+  font-family: 'Segoe UI', sans-serif;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+}
+
+#sm-search::placeholder { color: #8899aa; }
+#sm-search:focus { border-color: #5588cc; box-shadow: inset 0 1px 2px rgba(0,0,0,0.12), 0 0 3px rgba(80,160,255,0.3); }
+
+#sm-search-icon {
+  width: 26px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(to bottom, #e8f0fa 0%, #c0d0e8 100%);
+  border: 1px solid #7a9ec0;
+  border-left: none;
+  font-size: 13px;
+  color: #5577aa;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+/*  Right panel — transparent, inherits wrapper blur  */
+#sm-right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  border-left: 1px solid rgba(255,255,255,0.2);
+  border-radius: 0 3px 0 0;
+  background: transparent;
+}
+
+#sm-right-links {
+  flex: 1;
+  padding: 10px 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.sm-right-divider {
+  height: 1px;
+  margin: 4px 12px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(255,255,255,0.25) 20%,
+    rgba(255,255,255,0.25) 80%,
+    transparent
+  );
+}
+
+.sm-right-item {
+  padding: 6px 18px;
+  cursor: pointer;
+  color: #fff;
+  font-size: 12.5px;
+  font-weight: 600;
+  white-space: nowrap;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.55);
+  border: 1px solid transparent;
+  margin: 0 4px;
+  border-radius: 3px;
+  transition: background 0.08s, border-color 0.08s, box-shadow 0.08s;
+}
+
+.sm-right-item:hover {
+  background: linear-gradient(
+    to bottom,
+    rgba(180,220,255,0.35) 0%,
+    rgba(100,170,240,0.25) 40%,
+    rgba(60,130,220,0.30) 100%
+  );
+  border-color: rgba(160,210,255,0.6);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.35),
+    inset 0 -1px 0 rgba(0,0,0,0.08),
+    0 0 6px rgba(120,180,255,0.35);
+}
+
+/*  Restart strip  */
+#sm-restart-bar {
+  display: flex;
+  align-items: center;
+  border-top: 1px solid rgba(255,255,255,0.12);
+  background: rgba(0,0,0,0.25);
+  padding: 5px 10px;
+}
+
+#sm-restart-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(
+    to bottom,
+    rgba(160, 210, 255, 0.28) 0%,
+    rgba(80,  150, 230, 0.18) 45%,
+    rgba(50,  110, 200, 0.25) 100%
+  );
+  border: 1px solid rgba(160, 210, 255, 0.55);
+  border-radius: 3px;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  font-family: 'Segoe UI', sans-serif;
+  padding: 5px 14px;
+  cursor: pointer;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.6);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.35),
+    inset 0 -1px 0 rgba(0,0,0,0.1);
+  transition: background 0.08s, box-shadow 0.08s;
+}
+
+#sm-restart-btn:hover {
+  background: linear-gradient(
+    to bottom,
+    rgba(190, 225, 255, 0.38) 0%,
+    rgba(100, 170, 240, 0.26) 45%,
+    rgba(65,  125, 215, 0.34) 100%
+  );
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.45),
+    inset 0 -1px 0 rgba(0,0,0,0.08),
+    0 0 6px rgba(120,180,255,0.35);
+}
