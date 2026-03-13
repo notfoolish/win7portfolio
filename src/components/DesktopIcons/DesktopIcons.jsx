@@ -10,6 +10,7 @@ const TASKBAR_H = 40
 const ICONS_DEF = [
     { id: 'recycle',  label: 'Recycle Bin',   icon: '/win7icons/Shell32.dll/imageres_55.ico', appId: 'recycle' },
     { id: 'computer', label: 'Computer',     icon: '/win7icons/Shell32.dll/shell32_16.ico', appId: 'computer' },
+    { id: 'ie',       label: 'Internet Explorer', icon: '/win7icons/Internet Explorer/iexplore_32528.ico', appId: 'ie' },
 ]
 
 /* clamp to grid so the full icon stays on screen */

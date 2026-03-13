@@ -23,7 +23,7 @@ function DesktopSelection({ containerRef, onRectChange, onSelectionEnd }) {
       if (!el.contains(target)) return
 
       // Ignore interactive UI layers; allow empty desktop area (including #desktop-icons background)
-      if (target.closest('.desktop-icon, .window, .title-bar, #taskbar, #start-menu-wrap')) return
+      if (target.closest('.desktop-icon, .win7-rnd, .window, .title-bar, .react-resizable-handle, #taskbar, #start-menu-wrap')) return
 
       const next = { left: e.clientX, top: e.clientY, width: 0, height: 0 }
       origin.current = { x: e.clientX, y: e.clientY }
