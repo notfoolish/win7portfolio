@@ -47,8 +47,8 @@ function DeskIcon({ icon, selected, onSelect, onOpen }) {
 }
 
 /* ─── Desktop drop surface ─── */
-function DesktopIcons({ onAppOpen }) {
-  const [selected, setSelected] = useState(null)
+function DesktopIcons({ onAppOpen, selectionRect, suppressNextClear, onConsumeSuppressClear }) {
+  const [selectedIds, setSelectedIds] = useState([])
   const [positions, setPositions] = useState(() => {
     const map = {}
     ICONS_DEF.forEach((ic, i) => { map[ic.id] = { col: 0, row: i } })
@@ -56,6 +56,33 @@ function DesktopIcons({ onAppOpen }) {
   })
   const containerRef = useRef(null)
   const [gridSize, setGridSize] = useState({ cols: 1, rows: 1 })
+
+  useEffect(() => {
+    if (!selectionRect || selectionRect.width < 3 || selectionRect.height < 3) return
+    const host = containerRef.current
+    if (!host) return
+
+    const hostRect = host.getBoundingClientRect()
+    const sel = {
+      left: selectionRect.left,
+      top: selectionRect.top,
+      right: selectionRect.left + selectionRect.width,
+      bottom: selectionRect.top + selectionRect.height,
+    }
+
+    const hits = ICONS_DEF
+      .filter(icon => {
+        const pos = positions[icon.id]
+        const left = hostRect.left + PADDING + pos.col * CELL_W
+        const top = hostRect.top + PADDING + pos.row * CELL_H
+        const right = left + CELL_W
+        const bottom = top + CELL_H
+        return !(right < sel.left || left > sel.right || bottom < sel.top || top > sel.bottom)
+      })
+      .map(icon => icon.id)
+
+    setSelectedIds(hits)
+  }, [selectionRect, positions])
 
   /* recalc available grid on resize */
   useEffect(() => {
@@ -102,7 +129,13 @@ function DesktopIcons({ onAppOpen }) {
     <div
       id="desktop-icons"
       ref={node => { dropRef(node); containerRef.current = node }}
-      onClick={() => setSelected(null)}
+      onClick={() => {
+        if (suppressNextClear) {
+          onConsumeSuppressClear?.()
+          return
+        }
+        setSelectedIds([])
+      }}
     >
       {ICONS_DEF.map(icon => {
         const pos = positions[icon.id]
@@ -120,8 +153,8 @@ function DesktopIcons({ onAppOpen }) {
           >
             <DeskIcon
               icon={icon}
-              selected={selected === icon.id}
-              onSelect={setSelected}
+              selected={selectedIds.includes(icon.id)}
+              onSelect={(id) => setSelectedIds([id])}
               onOpen={handleOpen}
             />
           </div>

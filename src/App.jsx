@@ -55,6 +55,8 @@ let _nextId = 1
 function App() {
   const [startOpen, setStartOpen] = useState(false)
   const [windows,   setWindows]   = useState([])
+  const [desktopSelectionRect, setDesktopSelectionRect] = useState(null)
+  const [suppressNextDesktopClear, setSuppressNextDesktopClear] = useState(false)
   const topZ       = useRef(100)
   const desktopRef = useRef(null)   // windows live in 100-8999, taskbar 9999, start menu 9998
 
@@ -165,10 +167,19 @@ function App() {
     <div ref={desktopRef} className="win7-desktop" onClick={() => setStartOpen(false)}>
 
       {/* ── Desktop selection box ── */}
-      <DesktopSelection containerRef={desktopRef} />
+      <DesktopSelection
+        containerRef={desktopRef}
+        onRectChange={setDesktopSelectionRect}
+        onSelectionEnd={() => setSuppressNextDesktopClear(true)}
+      />
 
       {/* ── Desktop icons ── */}
-      <DesktopIcons onAppOpen={openApp} />
+      <DesktopIcons
+        onAppOpen={openApp}
+        selectionRect={desktopSelectionRect}
+        suppressNextClear={suppressNextDesktopClear}
+        onConsumeSuppressClear={() => setSuppressNextDesktopClear(false)}
+      />
       {windows.map(w => {
         const AppComponent = APP_COMPONENTS[w.appId]
         return (
