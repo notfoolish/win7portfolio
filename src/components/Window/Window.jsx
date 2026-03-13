@@ -109,7 +109,7 @@ function Window({
       dragHandleClassName="title-bar"
       disableDragging={maximized}
       enableResizing={!maximized}
-      style={{ zIndex }}
+      style={{ zIndex, pointerEvents: hidden ? 'none' : undefined }}
       onMouseDown={onFocus}
       className="win7-rnd"
     >

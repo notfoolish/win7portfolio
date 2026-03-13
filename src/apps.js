@@ -93,6 +93,11 @@ export const APPS = {
     icon: '/win7icons/Shell32.dll/imageres_55.ico',
     single: true, width: 620, height: 440,
   },
+  aboutme: {
+    appId: 'aboutme', title: 'About Me',
+    icon: '/win7icons/Special Folders/imageres_129.ico',
+    single: true, width: 820, height: 600,
+  },
 }
 
 // These three are always visible as pinned icons on the taskbar

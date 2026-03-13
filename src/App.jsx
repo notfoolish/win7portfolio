@@ -28,6 +28,7 @@ import DevicesAndPrinters from './apps/DevicesAndPrinters'
 import DefaultPrograms    from './apps/DefaultPrograms'
 import HelpAndSupport     from './apps/HelpAndSupport'
 import RecycleBin         from './apps/RecycleBin'
+import AboutMe            from './apps/AboutMe'
 
 const APP_COMPONENTS = {
   ie:       InternetExplorer,
@@ -48,6 +49,7 @@ const APP_COMPONENTS = {
   defaults: DefaultPrograms,
   help:     HelpAndSupport,
   recycle:  RecycleBin,
+  aboutme:  AboutMe,
 }
 
 let _nextId = 1

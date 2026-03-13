@@ -28,6 +28,30 @@
   vertical-align: middle;
 }
 
+.win7-window .title-bar {
+  cursor: var(--cursor-move);
+}
+
+.win7-rnd .react-resizable-handle-e,
+.win7-rnd .react-resizable-handle-w {
+  cursor: var(--cursor-ew-resize) !important;
+}
+
+.win7-rnd .react-resizable-handle-n,
+.win7-rnd .react-resizable-handle-s {
+  cursor: var(--cursor-ns-resize) !important;
+}
+
+.win7-rnd .react-resizable-handle-se,
+.win7-rnd .react-resizable-handle-nw {
+  cursor: var(--cursor-nwse-resize) !important;
+}
+
+.win7-rnd .react-resizable-handle-ne,
+.win7-rnd .react-resizable-handle-sw {
+  cursor: var(--cursor-nesw-resize) !important;
+}
+
 /* Window body scrolls and fills remaining height */
 .win7-body {
   flex: 1 !important;

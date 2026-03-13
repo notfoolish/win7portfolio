@@ -4,6 +4,48 @@
   padding: 0;
 }
 
+:root {
+  --cursor-default: url('/cursor/arrow.cur'), auto;
+  --cursor-pointer: url('/cursor/link.cur'), pointer;
+  --cursor-text: url('/cursor/text.cur'), text;
+  --cursor-move: url('/cursor/move.cur'), move;
+  --cursor-help: url('/cursor/help.cur'), help;
+  --cursor-wait: url('/cursor/working.ani'), progress;
+  --cursor-not-allowed: not-allowed;
+  --cursor-crosshair: url('/cursor/precision.cur'), crosshair;
+  --cursor-ew-resize: url('/cursor/horizontal.cur'), ew-resize;
+  --cursor-ns-resize: url('/cursor/vertical.cur'), ns-resize;
+  --cursor-nwse-resize: url('/cursor/h1.cur'), nwse-resize;
+  --cursor-nesw-resize: url('/cursor/h2.cur'), nesw-resize;
+}
+
+html,
+body,
+#root {
+  cursor: var(--cursor-default);
+}
+
+:where(button, [role='button'], a, summary, select, label[for], input[type='checkbox'], input[type='radio']) {
+  cursor: var(--cursor-pointer) !important;
+}
+
+:where(
+  input[type='text'],
+  input[type='search'],
+  input[type='url'],
+  input[type='email'],
+  input[type='password'],
+  input[type='number'],
+  textarea,
+  [contenteditable='true']
+) {
+  cursor: var(--cursor-text) !important;
+}
+
+:where([disabled], [aria-disabled='true']) {
+  cursor: var(--cursor-not-allowed) !important;
+}
+
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   overflow: hidden;

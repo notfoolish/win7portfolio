@@ -22,7 +22,7 @@
   padding: 4px;
   border: 1px solid transparent;
   border-radius: 3px;
-  cursor: default;
+  cursor: var(--cursor-default);
   gap: 4px;
 }
 

@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import './StartMenu.css'
 
 const PINNED = [
+  { id: 'aboutme',   label: 'About Me',             icon: '/win7icons/Special Folders/imageres_129.ico' },
   { id: 'ie',        label: 'Internet Explorer',   icon: '/win7icons/Internet Explorer/iexplore_32528.ico' },
   { id: 'wmp',       label: 'Windows Media Player', icon: '/win7icons/WMP12 Icons/WMP 12 1.ico' },
   { id: 'wordpad',   label: 'WordPad',              icon: '/win7icons/Wordpad/wordpad_128.ico' },
