@@ -132,10 +132,14 @@
   font-size: 11px;
   color: #1a3a60;
   text-decoration: none;
-  cursor: var(--cursor-pointer);
+  cursor: var(--cursor-default);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+a.am-side-item {
+  cursor: var(--cursor-pointer);
 }
 
 .am-side-item:hover {
