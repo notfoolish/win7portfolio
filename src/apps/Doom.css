@@ -19,12 +19,24 @@
   min-height: 0;
   display: block;
   background: #000;
+  overflow: hidden;
 }
 
 .doom-dosbox .dosbox-container,
 .doom-dosbox canvas {
   width: 100% !important;
   height: 100% !important;
+}
+
+.doom-dosbox .dosbox-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.doom-dosbox canvas {
+  display: block;
+  margin: 0 auto !important;
 }
 
 .doom-overlay {

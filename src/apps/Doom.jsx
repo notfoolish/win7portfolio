@@ -10,12 +10,14 @@ function Doom() {
   const playerRef = useRef(null)
 
   useEffect(() => {
+    const hostEl = dosboxHostRef.current
+
     const boot = async () => {
       setLoading(true)
       setError('')
 
       try {
-        const root = dosboxHostRef.current
+        const root = hostEl
         if (!root) return
         if (!window.Dos) {
           throw new Error('js-dos runtime is missing. Check /public/js-dos files.')
@@ -49,21 +51,10 @@ function Doom() {
         // noop
       }
 
-      if (dosboxHostRef.current) {
-        dosboxHostRef.current.innerHTML = ''
+      if (hostEl) {
+        hostEl.innerHTML = ''
       }
     }
-  }, [])
-
-  useEffect(() => {
-    const onMaximizeChanged = (event) => {
-      const detail = event?.detail
-      if (!detail || detail.title !== 'DOOM') return
-      playerRef.current?.setFullScreen?.(Boolean(detail.maximized))
-    }
-
-    window.addEventListener('win7-window-maximize-changed', onMaximizeChanged)
-    return () => window.removeEventListener('win7-window-maximize-changed', onMaximizeChanged)
   }, [])
 
   return (

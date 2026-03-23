@@ -68,6 +68,11 @@ export const APPS = {
     icon: '/games/game_icons/doom.png',
     single: true, width: 980, height: 700,
   },
+  vicecity: {
+    appId: 'vicecity', title: 'GTA: Vice City',
+    icon: '/games/reVCDOS-main/dist/cover.jpg',
+    single: true, width: 1180, height: 760, startMaximized: true,
+  },
   computer: {
     appId: 'computer', title: 'Computer',
     icon: '/win7icons/Shell32.dll/shell32_16.ico',
@@ -97,6 +102,11 @@ export const APPS = {
     appId: 'aboutme', title: 'About Me',
     icon: '/win7icons/Special Folders/imageres_129.ico',
     single: true, width: 820, height: 600,
+  },
+  resume: {
+    appId: 'resume', title: 'Resume',
+    icon: '/win7icons/Libraries/imageres_1002.ico',
+    single: true, width: 980, height: 700,
   },
 }
 

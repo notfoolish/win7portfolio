@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { lazy, Suspense, useState, useRef } from 'react'
 import { AnimatePresence } from 'framer-motion'
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
@@ -10,49 +10,43 @@ import Window    from './components/Window/Window'
 import DesktopIcons     from './components/DesktopIcons/DesktopIcons'
 import DesktopSelection from './components/DesktopSelection/DesktopSelection'
 
-import InternetExplorer   from './apps/InternetExplorer'
-import WindowsExplorer    from './apps/WindowsExplorer'
-import WindowsMediaPlayer from './apps/WindowsMediaPlayer'
-import WordPad            from './apps/WordPad'
-import Paint              from './apps/Paint'
-import Notepad            from './apps/Notepad'
-import CommandPrompt      from './apps/CommandPrompt'
-import PowerShell         from './apps/PowerShell'
-import Documents          from './apps/Documents'
-import Pictures           from './apps/Pictures'
-import Music              from './apps/Music'
-import Games              from './apps/Games'
-import Doom               from './apps/Doom'
-import Computer           from './apps/Computer'
-import ControlPanel       from './apps/ControlPanel'
-import DevicesAndPrinters from './apps/DevicesAndPrinters'
-import DefaultPrograms    from './apps/DefaultPrograms'
-import HelpAndSupport     from './apps/HelpAndSupport'
-import AboutMe            from './apps/AboutMe'
-
 const APP_COMPONENTS = {
-  ie:       InternetExplorer,
-  explorer: WindowsExplorer,
-  wmp:      WindowsMediaPlayer,
-  wordpad:  WordPad,
-  paint:    Paint,
-  notepad:  Notepad,
-  cmd:      CommandPrompt,
-  pshell:   PowerShell,
-  docs:     Documents,
-  pics:     Pictures,
-  music:    Music,
-  games:    Games,
-  doom:     Doom,
-  computer: Computer,
-  cp:       ControlPanel,
-  devices:  DevicesAndPrinters,
-  defaults: DefaultPrograms,
-  help:     HelpAndSupport,
-  aboutme:  AboutMe,
+  ie:       lazy(() => import('./apps/InternetExplorer')),
+  explorer: lazy(() => import('./apps/WindowsExplorer')),
+  wmp:      lazy(() => import('./apps/WindowsMediaPlayer')),
+  wordpad:  lazy(() => import('./apps/WordPad')),
+  paint:    lazy(() => import('./apps/Paint')),
+  notepad:  lazy(() => import('./apps/Notepad')),
+  cmd:      lazy(() => import('./apps/CommandPrompt')),
+  pshell:   lazy(() => import('./apps/PowerShell')),
+  docs:     lazy(() => import('./apps/Documents')),
+  pics:     lazy(() => import('./apps/Pictures')),
+  music:    lazy(() => import('./apps/Music')),
+  games:    lazy(() => import('./apps/Games')),
+  doom:     lazy(() => import('./apps/Doom')),
+  vicecity: lazy(() => import('./apps/ViceCity')),
+  computer: lazy(() => import('./apps/Computer')),
+  cp:       lazy(() => import('./apps/ControlPanel')),
+  devices:  lazy(() => import('./apps/DevicesAndPrinters')),
+  defaults: lazy(() => import('./apps/DefaultPrograms')),
+  help:     lazy(() => import('./apps/HelpAndSupport')),
+  aboutme:  lazy(() => import('./apps/AboutMe')),
+  resume:   lazy(() => import('./apps/Resume')),
 }
 
 let _nextId = 1
+const TASKBAR_HEIGHT = 40
+
+function getSpawnPosition(id, width, height) {
+  const off = (id % 10) * 24
+  const maxX = Math.max(0, window.innerWidth - width)
+  const maxY = Math.max(0, window.innerHeight - TASKBAR_HEIGHT - height)
+
+  return {
+    x: Math.min(80 + off, maxX),
+    y: Math.min(50 + off, maxY),
+  }
+}
 
 function App() {
   const [startOpen, setStartOpen] = useState(false)
@@ -83,7 +77,9 @@ function App() {
       // Spawn new window
       topZ.current += 1
       const id   = _nextId++
-      const off  = (id % 10) * 24
+      const width = app.width || 500
+      const height = app.height || 360
+      const pos = getSpawnPosition(id, width, height)
       return [
         ...ws.map(w => ({ ...w, focused: false })),
         {
@@ -91,13 +87,14 @@ function App() {
           appId:    app.appId,
           title:    app.title,
           icon:     app.icon,
+          startMaximized: !!app.startMaximized,
           minimized: false,
           focused:   true,
           zIndex:    topZ.current,
-          x: 80  + off,
-          y: 50  + off,
-          width:  app.width  || 500,
-          height: app.height || 360,
+          x: pos.x,
+          y: pos.y,
+          width,
+          height,
         },
       ]
     })
@@ -192,6 +189,7 @@ function App() {
             zIndex={w.zIndex}
             minimized={w.minimized}
             focused={w.focused}
+            startMaximized={w.startMaximized}
             defaultWidth={w.width}
             defaultHeight={w.height}
             defaultX={w.x}
@@ -200,7 +198,11 @@ function App() {
             onMinimize={()  => minimizeWindow(w.id)}
             onFocus={()    => focusWindow(w.id)}
           >
-            {AppComponent && <AppComponent />}
+            {AppComponent && (
+              <Suspense fallback={<div className="window-loading">Loading...</div>}>
+                <AppComponent />
+              </Suspense>
+            )}
           </Window>
         )
       })}

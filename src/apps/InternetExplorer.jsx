@@ -29,7 +29,6 @@ function InternetExplorer() {
 
   useEffect(() => {
     if (!loading) return
-    setEmbedBlockedHint(false)
     const t = setTimeout(() => setEmbedBlockedHint(true), 3500)
     return () => clearTimeout(t)
   }, [loading, currentUrl, reloadTick])

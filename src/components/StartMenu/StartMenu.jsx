@@ -1,13 +1,14 @@
-import { useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { Fragment, useState } from 'react'
 import './StartMenu.css'
 
 const PINNED = [
   { id: 'aboutme',   label: 'About Me',             icon: '/win7icons/Special Folders/imageres_129.ico' },
+  { id: 'resume',    label: 'Resume',               icon: '/win7icons/Libraries/imageres_1002.ico' },
   { id: 'ie',        label: 'Internet Explorer',   icon: '/win7icons/Internet Explorer/iexplore_32528.ico' },
   { id: 'wmp',       label: 'Windows Media Player', icon: '/win7icons/WMP12 Icons/WMP 12 1.ico' },
   { id: 'wordpad',   label: 'WordPad',              icon: '/win7icons/Wordpad/wordpad_128.ico' },
   { id: 'paint',     label: 'Paint',                icon: '/win7icons/Default Programs/mspaint_2.ico' },
+  { id: 'vicecity',  label: 'GTA: Vice City',       icon: '/games/reVCDOS-main/dist/cover.jpg' },
   { id: 'doom',      label: 'DOOM',                 icon: '/games/game_icons/doom.png' },
   { id: 'notepad',   label: 'Notepad',              icon: '/win7icons/Default Programs/notepad_2.ico' },
   { id: 'cmd',       label: 'Command Prompt',       icon: '/win7icons/Default Programs/cmd_IDI_APPICON.ico' },
@@ -39,12 +40,8 @@ function StartMenu({ onClose, onAppOpen }) {
   }
 
   return (
-    <motion.div
+    <div
       id="start-menu-wrap"
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: 10 }}
-      transition={{ duration: 0.15 }}
       onClick={e => e.stopPropagation()}
     >
       {/* Blur overlay for the glass border frame */}
@@ -91,13 +88,13 @@ function StartMenu({ onClose, onAppOpen }) {
 
         <div id="sm-right-links">
           {RIGHT_LINKS.map((link) => (
-            <>
-              {link.id === 'cp'   && <div key="div1" className="sm-right-divider" />}
-              {link.id === 'help' && <div key="div2" className="sm-right-divider" />}
-              <div key={link.id} className="sm-right-item" onClick={() => launch(link.id)}>
+            <Fragment key={link.id}>
+              {link.id === 'cp'   && <div className="sm-right-divider" />}
+              {link.id === 'help' && <div className="sm-right-divider" />}
+              <div className="sm-right-item" onClick={() => launch(link.id)}>
                 <span>{link.label}</span>
               </div>
-            </>
+            </Fragment>
           ))}
         </div>
 
@@ -107,7 +104,7 @@ function StartMenu({ onClose, onAppOpen }) {
         </div>
       </div>
       </div>
-    </motion.div>
+    </div>
   )
 }
 

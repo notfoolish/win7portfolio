@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, useCallback } from 'react'
 import './DesktopSelection.css'
 
 function DesktopSelection({ containerRef, onRectChange, onSelectionEnd }) {
@@ -6,11 +6,11 @@ function DesktopSelection({ containerRef, onRectChange, onSelectionEnd }) {
   const origin = useRef(null)
   const rectRef = useRef(null)
 
-  const updateRect = (next) => {
+  const updateRect = useCallback((next) => {
     rectRef.current = next
     setRect(next)
     onRectChange?.(next)
-  }
+  }, [onRectChange])
 
   useEffect(() => {
     const el = containerRef?.current
@@ -60,7 +60,7 @@ function DesktopSelection({ containerRef, onRectChange, onSelectionEnd }) {
       window.removeEventListener('mousemove', onMouseMove)
       window.removeEventListener('mouseup', onMouseUp)
     }
-  }, [containerRef, onRectChange, onSelectionEnd])
+  }, [containerRef, onSelectionEnd, updateRect])
 
   if (!rect || (rect.width < 3 && rect.height < 3)) return null
 

@@ -1,6 +1,5 @@
 import { useState, useRef } from 'react'
 import { Rnd } from 'react-rnd'
-import { motion } from 'framer-motion'
 import './Window.css'
 
 function Window({
@@ -9,16 +8,31 @@ function Window({
   children,
   onClose,
   onMinimize,
+  onMaximizeRequest,
   onFocus,
   zIndex,
   minimized,
   focused,
+  startMaximized = false,
   defaultWidth  = 500,
   defaultHeight = 380,
   defaultX      = 120,
   defaultY      = 80,
 }) {
   const TASKBAR_HEIGHT = 40
+
+  const defaultWindowPos = {
+    x: Math.max(0, defaultX),
+    y: Math.max(0, defaultY),
+  }
+
+  const initialSize = startMaximized
+    ? { width: window.innerWidth, height: window.innerHeight - TASKBAR_HEIGHT }
+    : { width: defaultWidth, height: defaultHeight }
+
+  const initialPos = startMaximized
+    ? { x: 0, y: 0 }
+    : defaultWindowPos
 
   const clampPos = (nextPos, nextSize = size) => {
     const maxX = Math.max(0, window.innerWidth - Number(nextSize.width))
@@ -29,17 +43,22 @@ function Window({
     }
   }
 
-  const [maximized, setMaximized] = useState(false)
-  const [pos,  setPos]  = useState(() => ({
-    x: Math.max(0, Math.round((window.innerWidth  - defaultWidth)  / 2)),
-    y: Math.max(0, Math.round((window.innerHeight - 40 - defaultHeight) / 2)),
-  }))
-  const [size, setSize] = useState({ width: defaultWidth, height: defaultHeight })
+  const [maximized, setMaximized] = useState(startMaximized)
+  const [pos,  setPos]  = useState(initialPos)
+  const [size, setSize] = useState(initialSize)
   const [closing, setClosing] = useState(false)
-  const saved    = useRef(null)
+  const saved    = useRef(startMaximized
+    ? { pos: defaultWindowPos, size: { width: defaultWidth, height: defaultHeight } }
+    : null
+  )
   const dragState = useRef(null)
 
   const handleMaximize = () => {
+    if (typeof onMaximizeRequest === 'function') {
+      const handled = onMaximizeRequest({ maximized })
+      if (handled) return
+    }
+
     if (!maximized) {
       saved.current = { pos: { ...pos }, size: { ...size } }
       setPos({ x: 0, y: 0 })
@@ -137,18 +156,17 @@ function Window({
       onMouseDown={onFocus}
       className="win7-rnd"
     >
-      <motion.div
-        animate={
-          hidden
-            ? { opacity: 0, scale: 0.88, y: 16, transition: { duration: 0.15, ease: [0.4, 0, 1, 1] } }
-            : { opacity: 1, scale: 1,    y: 0,  transition: { duration: 0.2,  ease: [0.2, 0, 0.2, 1] } }
-        }
-        initial={{ opacity: 0, scale: 0.88, y: 16 }}
+      <div
         style={{
           width: '100%',
           height: '100%',
           pointerEvents: hidden ? 'none' : 'auto',
           transformOrigin: 'bottom center',
+          opacity: hidden ? 0 : 1,
+          transform: hidden ? 'scale(0.88) translateY(16px)' : 'scale(1) translateY(0)',
+          transition: hidden
+            ? 'opacity 150ms ease, transform 150ms cubic-bezier(0.4, 0, 1, 1)'
+            : 'opacity 200ms ease, transform 200ms cubic-bezier(0.2, 0, 0.2, 1)',
         }}
       >
         <div className="win7 win7-window">
@@ -177,7 +195,7 @@ function Window({
 
           </div>
         </div>
-      </motion.div>
+      </div>
     </Rnd>
   )
 }

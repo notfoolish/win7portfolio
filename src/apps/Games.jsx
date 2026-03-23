@@ -2,6 +2,10 @@ import './Games.css'
 
 const WEB_GAMES = [
   {
+    title: 'GTA: Vice City (reVCDOS)',
+    reason: 'Now integrated as a startup app window using the local /vicecity/ backend route.',
+  },
+  {
     title: 'Tic-Tac-Toe',
     reason: 'Simple 3x3 grid, turn logic, and win-check rules are straightforward in React.',
   },

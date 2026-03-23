@@ -9,8 +9,10 @@ const TASKBAR_H = 40
 
 const ICONS_DEF = [
   { id: 'aboutme',  label: 'About Me',           icon: '/win7icons/Special Folders/imageres_129.ico',     appId: 'aboutme' },
+  { id: 'resume',   label: 'Resume',             icon: '/win7icons/Libraries/imageres_1002.ico',          appId: 'resume' },
   { id: 'computer', label: 'Computer',           icon: '/win7icons/Shell32.dll/shell32_16.ico',            appId: 'computer' },
   { id: 'ie',       label: 'Internet Explorer',  icon: '/win7icons/Internet Explorer/iexplore_32528.ico', appId: 'ie' },
+  { id: 'vicecity', label: 'GTA: Vice City',     icon: '/games/reVCDOS-main/dist/cover.jpg',                appId: 'vicecity' },
   { id: 'doom',     label: 'DOOM',               icon: '/games/game_icons/doom.png',                        appId: 'doom' },
 ]
 
