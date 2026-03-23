@@ -29,10 +29,19 @@
   top: -8px; left: 2px;
   width: 54px; height: 54px;
   z-index: 4;
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  background: transparent;
   cursor: pointer;
+}
+
+.menu-button-img {
+  width: 54px;
+  height: 54px;
+  object-fit: contain;
+  pointer-events: none;
+  display: block;
   filter: drop-shadow(0 3px 6px rgba(0,0,0,0.8));
 }
 #pined-items {

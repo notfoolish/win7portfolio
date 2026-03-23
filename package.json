@@ -12,7 +12,9 @@
   "dependencies": {
     "@fortawesome/fontawesome-free": "^7.2.0",
     "7.css": "^0.21.1",
+    "emulators-ui": "^0.73.9",
     "framer-motion": "^12.35.2",
+    "js-dos": "^8.3.20",
     "react": "^19.2.0",
     "react-dnd": "^16.0.1",
     "react-dnd-html5-backend": "^16.0.1",

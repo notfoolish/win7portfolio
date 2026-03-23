@@ -18,6 +18,17 @@ function Window({
   defaultX      = 120,
   defaultY      = 80,
 }) {
+  const TASKBAR_HEIGHT = 40
+
+  const clampPos = (nextPos, nextSize = size) => {
+    const maxX = Math.max(0, window.innerWidth - Number(nextSize.width))
+    const maxY = Math.max(0, window.innerHeight - Number(nextSize.height))
+    return {
+      x: Math.min(Math.max(0, nextPos.x), maxX),
+      y: Math.min(Math.max(0, nextPos.y), maxY),
+    }
+  }
+
   const [maximized, setMaximized] = useState(false)
   const [pos,  setPos]  = useState(() => ({
     x: Math.max(0, Math.round((window.innerWidth  - defaultWidth)  / 2)),
@@ -32,12 +43,20 @@ function Window({
     if (!maximized) {
       saved.current = { pos: { ...pos }, size: { ...size } }
       setPos({ x: 0, y: 0 })
-      setSize({ width: window.innerWidth, height: window.innerHeight - 40 })
+      setSize({ width: window.innerWidth, height: window.innerHeight - TASKBAR_HEIGHT })
       setMaximized(true)
+      window.dispatchEvent(new CustomEvent('win7-window-maximize-changed', {
+        detail: { title, maximized: true },
+      }))
     } else {
-      setPos(saved.current.pos)
-      setSize(saved.current.size)
+      const restoredSize = saved.current?.size ?? size
+      const restoredPos = saved.current?.pos ?? pos
+      setSize(restoredSize)
+      setPos(clampPos(restoredPos, restoredSize))
       setMaximized(false)
+      window.dispatchEvent(new CustomEvent('win7-window-maximize-changed', {
+        detail: { title, maximized: false },
+      }))
     }
   }
 
@@ -56,25 +75,29 @@ function Window({
         if (Math.abs(me.clientX - ds.startX) < 5 && Math.abs(me.clientY - ds.startY) < 5) return
 
         const rw = saved.current?.size.width ?? 500
-        const newX = Math.max(0, me.clientX - Math.round(rw / 2))
-        const newY = Math.max(0, me.clientY - 12)
+        const rh = saved.current?.size.height ?? 380
+        const restoredPos = clampPos({
+          x: me.clientX - Math.round(rw / 2),
+          y: me.clientY - 12,
+        }, { width: rw, height: rh })
 
         ds.restored = true
-        ds.originX = newX
-        ds.originY = newY
+        ds.restoredSize = { width: rw, height: rh }
+        ds.originX = restoredPos.x
+        ds.originY = restoredPos.y
         ds.mouseOriginX = me.clientX
         ds.mouseOriginY = me.clientY
 
-        setPos({ x: newX, y: newY })
+        setPos(restoredPos)
         setSize({ ...saved.current.size })
         setMaximized(false)
         return
       }
 
-      setPos({
-        x: Math.max(0, ds.originX + (me.clientX - ds.mouseOriginX)),
-        y: Math.max(0, ds.originY + (me.clientY - ds.mouseOriginY)),
-      })
+      setPos(clampPos({
+        x: ds.originX + (me.clientX - ds.mouseOriginX),
+        y: ds.originY + (me.clientY - ds.mouseOriginY),
+      }, ds.restoredSize || size))
     }
 
     const onUp = () => {
@@ -98,10 +121,11 @@ function Window({
     <Rnd
       position={pos}
       size={size}
-      onDragStop={(_, d) => setPos({ x: d.x, y: d.y })}
+      onDragStop={(_, d) => setPos(clampPos({ x: d.x, y: d.y }))}
       onResizeStop={(_, __, ref, ___, position) => {
-        setSize({ width: ref.offsetWidth, height: ref.offsetHeight })
-        setPos(position)
+        const nextSize = { width: ref.offsetWidth, height: ref.offsetHeight }
+        setSize(nextSize)
+        setPos(clampPos(position, nextSize))
       }}
       minWidth={200}
       minHeight={140}

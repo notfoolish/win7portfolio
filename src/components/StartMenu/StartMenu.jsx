@@ -8,6 +8,7 @@ const PINNED = [
   { id: 'wmp',       label: 'Windows Media Player', icon: '/win7icons/WMP12 Icons/WMP 12 1.ico' },
   { id: 'wordpad',   label: 'WordPad',              icon: '/win7icons/Wordpad/wordpad_128.ico' },
   { id: 'paint',     label: 'Paint',                icon: '/win7icons/Default Programs/mspaint_2.ico' },
+  { id: 'doom',      label: 'DOOM',                 icon: '/games/game_icons/doom.png' },
   { id: 'notepad',   label: 'Notepad',              icon: '/win7icons/Default Programs/notepad_2.ico' },
   { id: 'cmd',       label: 'Command Prompt',       icon: '/win7icons/Default Programs/cmd_IDI_APPICON.ico' },
   { id: 'pshell',    label: 'Windows PowerShell',   icon: '/win7icons/Windows PowerShell/powershell_MSH_MAIN.ico' },

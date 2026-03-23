@@ -8,10 +8,10 @@ const PADDING = 10  // desktop edge padding
 const TASKBAR_H = 40
 
 const ICONS_DEF = [
-    { id: 'recycle',  label: 'Recycle Bin',        icon: '/win7icons/Shell32.dll/imageres_55.ico',           appId: 'recycle' },
-    { id: 'computer', label: 'Computer',           icon: '/win7icons/Shell32.dll/shell32_16.ico',            appId: 'computer' },
-    { id: 'ie',       label: 'Internet Explorer',  icon: '/win7icons/Internet Explorer/iexplore_32528.ico', appId: 'ie' },
-    { id: 'aboutme',  label: 'About Me',           icon: '/win7icons/Special Folders/imageres_129.ico',     appId: 'aboutme' },
+  { id: 'aboutme',  label: 'About Me',           icon: '/win7icons/Special Folders/imageres_129.ico',     appId: 'aboutme' },
+  { id: 'computer', label: 'Computer',           icon: '/win7icons/Shell32.dll/shell32_16.ico',            appId: 'computer' },
+  { id: 'ie',       label: 'Internet Explorer',  icon: '/win7icons/Internet Explorer/iexplore_32528.ico', appId: 'ie' },
+  { id: 'doom',     label: 'DOOM',               icon: '/games/game_icons/doom.png',                        appId: 'doom' },
 ]
 
 /* clamp to grid so the full icon stays on screen */
@@ -23,7 +23,6 @@ function snapToGrid(x, y, maxCols, maxRows) {
   return { col, row }
 }
 
-/* ─── Single draggable icon ─── */
 function DeskIcon({ icon, selected, onSelect, onOpen }) {
   const [{ isDragging }, dragRef] = useDrag({
     type: 'DESKTOP_ICON',
@@ -37,7 +36,7 @@ function DeskIcon({ icon, selected, onSelect, onOpen }) {
     <div
       ref={dragRef}
       className={cls}
-      onClick={e => { e.stopPropagation(); onSelect(icon.id) }}
+      onClick={e => { e.stopPropagation(); onSelect(icon.id, e) }}
       onDoubleClick={() => onOpen(icon)}
     >
       <div className="desktop-icon-img-wrap">
@@ -105,21 +104,76 @@ function DesktopIcons({ onAppOpen, selectionRect, suppressNextClear, onConsumeSu
     setPositions(prev => ({ ...prev, [id]: { col, row } }))
   }, [])
 
+  const moveIcons = useCallback((ids, dCol, dRow) => {
+    if (!ids.length) return
+
+    const movingSet = new Set(ids)
+    const selectedPos = ids
+      .map(id => ({ id, pos: positions[id] }))
+      .filter(entry => entry.pos)
+
+    if (!selectedPos.length) return
+
+    const cols = selectedPos.map(entry => entry.pos.col)
+    const rows = selectedPos.map(entry => entry.pos.row)
+    const minCol = Math.min(...cols)
+    const maxCol = Math.max(...cols)
+    const minRow = Math.min(...rows)
+    const maxRow = Math.max(...rows)
+
+    const boundedDCol = Math.max(-minCol, Math.min(dCol, (gridSize.cols - 1) - maxCol))
+    const boundedDRow = Math.max(-minRow, Math.min(dRow, (gridSize.rows - 1) - maxRow))
+
+    const targets = {}
+    for (const { id, pos } of selectedPos) {
+      targets[id] = { col: pos.col + boundedDCol, row: pos.row + boundedDRow }
+    }
+
+    const collides = Object.entries(targets).some(([id, target]) =>
+      Object.entries(positions).some(([otherId, otherPos]) =>
+        !movingSet.has(otherId) &&
+        otherPos.col === target.col &&
+        otherPos.row === target.row &&
+        otherId !== id
+      )
+    )
+    if (collides) return
+
+    setPositions(prev => {
+      const next = { ...prev }
+      for (const [id, target] of Object.entries(targets)) {
+        next[id] = target
+      }
+      return next
+    })
+  }, [gridSize.cols, gridSize.rows, positions])
+
   const [, dropRef] = useDrop({
     accept: 'DESKTOP_ICON',
     drop: (item, monitor) => {
       const delta = monitor.getDifferenceFromInitialOffset()
       if (!delta) return
       const prev = positions[item.id]
+      if (!prev) return
+
+      const movingIds = selectedIds.includes(item.id) ? selectedIds : [item.id]
       const rawX = prev.col * CELL_W + delta.x
       const rawY = prev.row * CELL_H + delta.y
-      const { col, row } = snapToGrid(rawX, rawY, gridSize.cols, gridSize.rows)
-      // prevent stacking — check if another icon already occupies this cell
-      const occupied = Object.entries(positions).some(
-        ([id, p]) => id !== item.id && p.col === col && p.row === row
-      )
-      if (occupied) return  // cancel drop, icon stays where it was
-      moveIcon(item.id, col, row)
+
+      const snapped = snapToGrid(rawX, rawY, gridSize.cols, gridSize.rows)
+      const dCol = snapped.col - prev.col
+      const dRow = snapped.row - prev.row
+
+      if (movingIds.length > 1) {
+        moveIcons(movingIds, dCol, dRow)
+      } else {
+        const { col, row } = snapped
+        const occupied = Object.entries(positions).some(
+          ([id, p]) => id !== item.id && p.col === col && p.row === row
+        )
+        if (occupied) return
+        moveIcon(item.id, col, row)
+      }
     },
   })
 
@@ -156,7 +210,18 @@ function DesktopIcons({ onAppOpen, selectionRect, suppressNextClear, onConsumeSu
             <DeskIcon
               icon={icon}
               selected={selectedIds.includes(icon.id)}
-              onSelect={(id) => setSelectedIds([id])}
+              onSelect={(id, event) => {
+                const multi = event?.ctrlKey || event?.metaKey
+                if (multi) {
+                  setSelectedIds(prev =>
+                    prev.includes(id)
+                      ? prev.filter(x => x !== id)
+                      : [...prev, id]
+                  )
+                  return
+                }
+                setSelectedIds([id])
+              }}
               onOpen={handleOpen}
             />
           </div>

@@ -28,6 +28,22 @@
   vertical-align: middle;
 }
 
+.win7-window .title-bar-text {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.win7-window .title-bar-text .win-title-icon {
+  margin-right: 0;
+  flex-shrink: 0;
+  display: inline-block;
+}
+
 .win7-window .title-bar {
   cursor: var(--cursor-move);
 }

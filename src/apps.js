@@ -63,6 +63,11 @@ export const APPS = {
     icon: '/win7icons/Games/Solitaire_108.ico',
     single: true, width: 720, height: 520,
   },
+  doom: {
+    appId: 'doom', title: 'DOOM',
+    icon: '/games/game_icons/doom.png',
+    single: true, width: 980, height: 700,
+  },
   computer: {
     appId: 'computer', title: 'Computer',
     icon: '/win7icons/Shell32.dll/shell32_16.ico',
@@ -87,11 +92,6 @@ export const APPS = {
     appId: 'help', title: 'Help and Support',
     icon: '/win7icons/Special Folders/imageres_8.ico',
     single: true, width: 720, height: 520,
-  },
-  recycle: {
-    appId: 'recycle', title: 'Recycle Bin',
-    icon: '/win7icons/Shell32.dll/imageres_55.ico',
-    single: true, width: 620, height: 440,
   },
   aboutme: {
     appId: 'aboutme', title: 'About Me',

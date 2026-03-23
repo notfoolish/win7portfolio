@@ -22,12 +22,12 @@ import Documents          from './apps/Documents'
 import Pictures           from './apps/Pictures'
 import Music              from './apps/Music'
 import Games              from './apps/Games'
+import Doom               from './apps/Doom'
 import Computer           from './apps/Computer'
 import ControlPanel       from './apps/ControlPanel'
 import DevicesAndPrinters from './apps/DevicesAndPrinters'
 import DefaultPrograms    from './apps/DefaultPrograms'
 import HelpAndSupport     from './apps/HelpAndSupport'
-import RecycleBin         from './apps/RecycleBin'
 import AboutMe            from './apps/AboutMe'
 
 const APP_COMPONENTS = {
@@ -43,12 +43,12 @@ const APP_COMPONENTS = {
   pics:     Pictures,
   music:    Music,
   games:    Games,
+  doom:     Doom,
   computer: Computer,
   cp:       ControlPanel,
   devices:  DevicesAndPrinters,
   defaults: DefaultPrograms,
   help:     HelpAndSupport,
-  recycle:  RecycleBin,
   aboutme:  AboutMe,
 }
 

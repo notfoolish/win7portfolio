@@ -4,6 +4,9 @@ import { APPS, TASKBAR_PINNED_IDS } from '../../apps'
 
 const PINNED_APPS = TASKBAR_PINNED_IDS.map(id => APPS[id])
 const PINNED_SET  = new Set(TASKBAR_PINNED_IDS)
+const START_ORB_DEFAULT = '/win7icons/StartButton/windowstaskbaricon.png'
+const START_ORB_HOVER   = '/win7icons/StartButton/windowstaskbarhovericon.png'
+const START_ORB_ACTIVE  = '/win7icons/StartButton/windowstaskbaractiveicon.png'
 
 function Taskbar({ startOpen, onStartClick, windows = [], onAppOpen, onWindowTaskbarClick, onShowDesktop }) {
   const [startHover,  setStartHover]  = useState(false)
@@ -13,6 +16,13 @@ function Taskbar({ startOpen, onStartClick, windows = [], onAppOpen, onWindowTas
   useEffect(() => {
     const t = setInterval(() => setTime(new Date()), 1000)
     return () => clearInterval(t)
+  }, [])
+
+  useEffect(() => {
+    ;[START_ORB_DEFAULT, START_ORB_HOVER, START_ORB_ACTIVE].forEach((src) => {
+      const img = new Image()
+      img.src = src
+    })
   }, [])
 
   const fmt12 = (d) => {
@@ -30,10 +40,10 @@ function Taskbar({ startOpen, onStartClick, windows = [], onAppOpen, onWindowTas
   }
 
   const startImg = (startActive || startOpen)
-    ? '/win7icons/StartButton/windowstaskbaractiveicon.png'
+    ? START_ORB_ACTIVE
     : startHover
-    ? '/win7icons/StartButton/windowstaskbarhovericon.png'
-    : '/win7icons/StartButton/windowstaskbaricon.png'
+    ? START_ORB_HOVER
+    : START_ORB_DEFAULT
 
   // Group open windows by appId
   const byAppId = {}
@@ -59,15 +69,26 @@ function Taskbar({ startOpen, onStartClick, windows = [], onAppOpen, onWindowTas
       <div id="blur-overlay" />
 
       {/* Start orb */}
-      <div
+      <button
+        type="button"
         id="menu-button"
-        style={{ backgroundImage: `url('${startImg}')` }}
         onMouseEnter={() => setStartHover(true)}
         onMouseLeave={() => { setStartHover(false); setStartActive(false) }}
         onMouseDown={() => setStartActive(true)}
         onMouseUp={() => setStartActive(false)}
+        onBlur={() => { setStartHover(false); setStartActive(false) }}
         onClick={onStartClick}
-      />
+      >
+        <img
+          src={startImg}
+          alt="Start"
+          className="menu-button-img"
+          draggable={false}
+          onError={(e) => {
+            e.currentTarget.src = START_ORB_DEFAULT
+          }}
+        />
+      </button>
 
       {/* Task buttons: pinned always visible + running non-pinned */}
       <div id="pined-items">

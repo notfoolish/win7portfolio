@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import './InternetExplorer.css'
 
-const HOME_URL = '/about-me.html'
+const HOME_URL = 'https://www.google.com/webhp?igu=1'
 
 function toUrl(input) {
   const raw = input.trim()
@@ -13,7 +13,7 @@ function toUrl(input) {
 
   if (/^[\w-]+(\.[\w-]+)+(\/.*)?$/i.test(raw)) return `https://${raw}`
 
-  return `https://www.bing.com/search?q=${encodeURIComponent(raw)}`
+  return `https://www.google.com/search?igu=1&q=${encodeURIComponent(raw)}`
 }
 
 function InternetExplorer() {
@@ -25,6 +25,7 @@ function InternetExplorer() {
   const [embedBlockedHint, setEmbedBlockedHint] = useState(false)
 
   const currentUrl = useMemo(() => history[index] || HOME_URL, [history, index])
+  const frameUrl = useMemo(() => currentUrl, [currentUrl])
 
   useEffect(() => {
     if (!loading) return
@@ -72,7 +73,9 @@ function InternetExplorer() {
     setReloadTick(v => v + 1)
   }
 
-  const goHome = () => navigate(HOME_URL)
+  const goHome = () => {
+    navigate(HOME_URL)
+  }
 
   return (
     <div className="ie-app">
@@ -100,13 +103,13 @@ function InternetExplorer() {
         </form>
       </div>
 
-      <div className="ie-status">{loading ? 'Loading...' : currentUrl}</div>
+      <div className="ie-status">{loading ? 'Loading...' : frameUrl}</div>
 
       <div className="ie-view">
         <iframe
-          key={`${currentUrl}__${reloadTick}`}
+          key={`${frameUrl}__${reloadTick}`}
           title="Internet Explorer"
-          src={currentUrl}
+          src={frameUrl}
           className="ie-iframe"
           onLoad={() => {
             setLoading(false)
@@ -140,7 +143,7 @@ function InternetExplorer() {
       </div>
 
       <div className="ie-note">
-        Tip: pages blocked by iframe policies can still be opened with “Open in New Tab”.
+        Tip: Home and search use Google (with embed-friendly flag). If a page blocks embedding, open it in a new tab.
       </div>
     </div>
   )

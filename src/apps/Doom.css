@@ -1,0 +1,87 @@
+.doom-app {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: #101216;
+  color: #d8dce4;
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+}
+
+.doom-stage {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+}
+
+.doom-dosbox {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  display: block;
+  background: #000;
+}
+
+.doom-dosbox .dosbox-container,
+.doom-dosbox canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.doom-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: rgba(0, 0, 0, 0.72);
+  text-align: center;
+  padding: 12px;
+}
+
+.doom-overlay-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.doom-help {
+  padding: 6px 8px;
+  font-size: 11px;
+  border-top: 1px solid #2a2f3a;
+  color: #9eaec6;
+  background: #141922;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.doom-help-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.doom-help-label {
+  min-width: 46px;
+  color: #b7c5db;
+  font-weight: 700;
+}
+
+.doom-help-sep {
+  opacity: 0.75;
+}
+
+.doom-kbd {
+  display: inline-block;
+  min-width: 16px;
+  text-align: center;
+  padding: 1px 5px;
+  border: 1px solid #4a5770;
+  border-radius: 3px;
+  background: #1d2635;
+  color: #eaf1ff;
+  font-weight: 700;
+}
