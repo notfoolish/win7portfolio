@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { Rnd } from 'react-rnd'
 import './Window.css'
 
@@ -20,17 +20,20 @@ function Window({
   defaultY      = 80,
 }) {
   const TASKBAR_HEIGHT = 40
+  const MOBILE_BREAKPOINT = 600
 
   const defaultWindowPos = {
     x: Math.max(0, defaultX),
     y: Math.max(0, defaultY),
   }
 
-  const initialSize = startMaximized
+  const initialIsMobile = typeof window !== 'undefined' && window.innerWidth <= MOBILE_BREAKPOINT
+
+  const initialSize = (startMaximized || initialIsMobile)
     ? { width: window.innerWidth, height: window.innerHeight - TASKBAR_HEIGHT }
     : { width: defaultWidth, height: defaultHeight }
 
-  const initialPos = startMaximized
+  const initialPos = (startMaximized || initialIsMobile)
     ? { x: 0, y: 0 }
     : defaultWindowPos
 
@@ -51,6 +54,8 @@ function Window({
     ? { pos: defaultWindowPos, size: { width: defaultWidth, height: defaultHeight } }
     : null
   )
+  const mobileAutoMax = useRef(false)
+  const [isMobile, setIsMobile] = useState(initialIsMobile)
   const dragState = useRef(null)
 
   const handleMaximize = () => {
@@ -136,6 +141,56 @@ function Window({
 
   const hidden = minimized || closing
 
+  // Keep maximized windows sized to the viewport and auto-maximize on small screens
+  useEffect(() => {
+    const onResize = () => {
+      const w = window.innerWidth
+      const h = window.innerHeight
+      const nowMobile = w <= MOBILE_BREAKPOINT
+      if (nowMobile !== isMobile) setIsMobile(nowMobile)
+
+      if (w <= MOBILE_BREAKPOINT) {
+        // auto-maximize on mobile-sized viewports
+        if (!maximized) {
+          // save prior state only if not already saved
+          if (!saved.current) saved.current = { pos: { ...pos }, size: { ...size } }
+          setPos({ x: 0, y: 0 })
+          setSize({ width: w, height: h - TASKBAR_HEIGHT })
+          setMaximized(true)
+          mobileAutoMax.current = true
+        } else {
+          // if already maximized, just ensure size matches viewport
+          setPos({ x: 0, y: 0 })
+          setSize({ width: w, height: h - TASKBAR_HEIGHT })
+        }
+      } else {
+        // when leaving mobile size, restore if we auto-maximized
+        if (mobileAutoMax.current) {
+          const restoredSize = saved.current?.size ?? { width: defaultWidth, height: defaultHeight }
+          const restoredPos = saved.current?.pos ?? defaultWindowPos
+          setSize(restoredSize)
+          setPos(clampPos(restoredPos, restoredSize))
+          setMaximized(false)
+          mobileAutoMax.current = false
+          saved.current = null
+        } else if (maximized) {
+          // ensure true maximized windows still match viewport
+          setPos({ x: 0, y: 0 })
+          setSize({ width: w, height: h - TASKBAR_HEIGHT })
+        } else {
+          // clamp position when viewport shrinks
+          setPos(p => clampPos(p, size))
+        }
+      }
+    }
+
+    window.addEventListener('resize', onResize)
+    // run once to initialize mobile state correctly
+    onResize()
+    return () => window.removeEventListener('resize', onResize)
+    // intentionally include only relevant refs, avoid re-running too often
+  }, [])
+
   return (
     <Rnd
       position={pos}
@@ -151,7 +206,7 @@ function Window({
       bounds="parent"
       dragHandleClassName="title-bar"
       disableDragging={maximized}
-      enableResizing={!maximized}
+      enableResizing={!maximized && !isMobile}
       style={{ zIndex, pointerEvents: hidden ? 'none' : undefined }}
       onMouseDown={onFocus}
       className="win7-rnd"
