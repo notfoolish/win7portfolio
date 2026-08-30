@@ -126,3 +126,47 @@
   display: flex;
   gap: 8px;
 }
+
+@media (max-width: 900px) {
+  .ie-toolbar {
+    flex-wrap: wrap;
+  }
+
+  .ie-address-form {
+    order: 2;
+    flex: 1 1 100%;
+  }
+}
+
+@media (max-width: 560px) {
+  .ie-toolbar {
+    gap: 4px;
+    padding: 4px;
+  }
+
+  .ie-btn,
+  .ie-go-btn {
+    min-width: 24px;
+    height: 22px;
+    font-size: 11px;
+  }
+
+  .ie-address-label {
+    display: none;
+  }
+
+  .ie-address-input {
+    height: 22px;
+    font-size: 11px;
+  }
+
+  .ie-fallback {
+    left: 8px;
+    right: 8px;
+    bottom: 8px;
+  }
+
+  .ie-fallback-actions {
+    flex-direction: column;
+  }
+}

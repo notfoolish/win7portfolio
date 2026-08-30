@@ -201,8 +201,8 @@ function Window({
         setSize(nextSize)
         setPos(clampPos(position, nextSize))
       }}
-      minWidth={200}
-      minHeight={140}
+      minWidth={360}
+      minHeight={260}
       bounds="parent"
       dragHandleClassName="title-bar"
       disableDragging={maximized}

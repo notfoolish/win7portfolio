@@ -1,6 +1,8 @@
 /* Rnd outer shell fills its own tracked size */
 .win7-rnd {
   /* react-rnd sets position: absolute automatically */
+  max-width: 100vw !important;
+  max-height: calc(100dvh - var(--taskbar-height)) !important;
 }
 
 /* Win7 wrapper fills the Rnd box */
@@ -76,4 +78,10 @@
   /* restore 7.css margin so content has breathing room */
   margin: 0 !important;
   padding: 8px !important;
+}
+
+@media (max-width: 768px) {
+  .win7-body {
+    padding: 6px !important;
+  }
 }

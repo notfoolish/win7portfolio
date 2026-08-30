@@ -16,6 +16,7 @@ const PINNED = [
 ]
 
 const RIGHT_LINKS = [
+  { id: 'explorer', label: 'Windows Explorer',    icon: '/win7icons/Standard Folders/imageres_3.ico' },
   { id: 'docs',     label: 'Documents',           icon: '/win7icons/Libraries/imageres_1002.ico' },
   { id: 'pics',     label: 'Pictures',            icon: '/win7icons/Libraries/imageres_1003.ico' },
   { id: 'music',    label: 'Music',               icon: '/win7icons/Libraries/imageres_1004.ico' },
@@ -23,11 +24,11 @@ const RIGHT_LINKS = [
   { id: 'computer', label: 'Computer',            icon: '/win7icons/Accessibility/accessibilitycpl_321.ico' },
   { id: 'cp',       label: 'Control Panel',       icon: '/win7icons/Control Panel/imageres_27.ico' },
   { id: 'devices',  label: 'Devices and Printers',icon: '/win7icons/Control Panel/imageres_78.ico' },
-  { id: 'defaults', label: 'Default Programs',    icon: '/win7icons/Default Programs/cmd_IDI_APPICON.ico' },
+
   { id: 'help',     label: 'Help and Support',    icon: '/win7icons/Special Folders/imageres_8.ico' },
 ]
 
-function StartMenu({ onClose, onAppOpen }) {
+function StartMenu({ onClose, onAppOpen, onRestart, onPlaySound }) {
   const [search, setSearch] = useState('')
 
   const visible = PINNED.filter(p =>
@@ -35,6 +36,7 @@ function StartMenu({ onClose, onAppOpen }) {
   )
 
   const launch = (appId) => {
+    onPlaySound?.()
     onAppOpen(appId)
     onClose()
   }
@@ -53,17 +55,24 @@ function StartMenu({ onClose, onAppOpen }) {
         {/* Pinned / search results */}
         <div id="sm-apps">
           {visible.map(app => (
-            <div key={app.id} className="sm-app-item" onClick={() => launch(app.id)}>
+            <button
+              key={app.id}
+              type="button"
+              className="sm-app-item"
+              onClick={() => launch(app.id)}
+              aria-label={`Open ${app.label}`}
+            >
               <img src={app.icon} alt={app.label} className="sm-app-icon" />
               <span>{app.label}</span>
-            </div>
+            </button>
           ))}
+          {visible.length === 0 && <div className="sm-empty">No programs found.</div>}
         </div>
 
         {/* All Programs */}
-        <div id="sm-all-programs">
+        <button id="sm-all-programs" type="button" aria-label="All Programs">
           <span>▶ All Programs</span>
-        </div>
+        </button>
 
         {/* Search box */}
         <div id="sm-search-wrap">
@@ -75,7 +84,7 @@ function StartMenu({ onClose, onAppOpen }) {
             onChange={e => setSearch(e.target.value)}
             autoFocus
           />
-          <span id="sm-search-icon">🔍</span>
+          <span id="sm-search-icon"><img src="/win7icons/Shell32.dll/shell32_22.ico" alt="" style={{width:14,height:14,objectFit:'contain',filter:'invert(0.4)'}} /></span>
         </div>
       </div>
 
@@ -91,16 +100,22 @@ function StartMenu({ onClose, onAppOpen }) {
             <Fragment key={link.id}>
               {link.id === 'cp'   && <div className="sm-right-divider" />}
               {link.id === 'help' && <div className="sm-right-divider" />}
-              <div className="sm-right-item" onClick={() => launch(link.id)}>
+              <button
+                type="button"
+                className="sm-right-item"
+                onClick={() => launch(link.id)}
+                aria-label={`Open ${link.label}`}
+              >
+                <img src={link.icon} alt="" className="sm-right-icon" />
                 <span>{link.label}</span>
-              </div>
+              </button>
             </Fragment>
           ))}
         </div>
 
         {/* Restart strip */}
         <div id="sm-restart-bar">
-          <button id="sm-restart-btn" onClick={() => window.location.reload(true)}>Restart</button>
+          <button id="sm-restart-btn" onClick={() => (onRestart ? onRestart() : window.location.reload())}>Restart</button>
         </div>
       </div>
       </div>

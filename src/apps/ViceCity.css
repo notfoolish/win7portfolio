@@ -14,3 +14,14 @@
   position: relative;
   overflow: hidden;
 }
+
+@media (max-width: 768px) {
+  .vicecity-app {
+    min-height: 0;
+  }
+
+  .vicecity-iframe {
+    width: 100%;
+    height: 100%;
+  }
+}

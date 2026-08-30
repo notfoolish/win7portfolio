@@ -331,3 +331,52 @@
     min-height: 14px;
   }
 }
+
+@media (max-width: 640px) {
+  .paint-workspace {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+  }
+
+  .paint-toolbox {
+    border-right: 0;
+    border-bottom: 1px solid #b8b8bc;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-content: start;
+  }
+
+  .paint-tool-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .paint-tool-btn {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .paint-tool-options,
+  .paint-tool-actions {
+    grid-column: 1 / -1;
+  }
+
+  .paint-color-slot-stack {
+    margin-top: 0;
+    justify-self: end;
+  }
+
+  .paint-colorbar {
+    flex-wrap: wrap;
+    align-items: flex-start;
+  }
+
+  .paint-custom-color {
+    margin-left: 0;
+  }
+
+  .paint-statusbar {
+    grid-template-columns: 1fr;
+    gap: 2px;
+    font-size: 11px;
+  }
+}

@@ -1,0 +1,97 @@
+.wordpad-app {
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	background: #e4ecf8;
+	border: 1px solid #9eb8d4;
+	font-family: 'Segoe UI', Tahoma, sans-serif;
+}
+
+.wordpad-ribbon {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	padding: 6px;
+	border-bottom: 1px solid #c8d4e3;
+	background: linear-gradient(to bottom, #f9fcff, #e8f0fa);
+}
+
+.wordpad-group {
+	display: flex;
+	align-items: center;
+	gap: 4px;
+	flex-wrap: wrap;
+}
+
+.wordpad-group button,
+.wordpad-group select {
+	min-height: 24px;
+	border: 1px solid #a9bfd8;
+	background: linear-gradient(to bottom, #fff, #e6eef8);
+	font-size: 12px;
+	padding: 2px 8px;
+	border-radius: 2px;
+}
+
+.wordpad-group button:hover {
+	border-color: #6f99c8;
+	background: linear-gradient(to bottom, #fff, #d9eaff);
+}
+
+.wordpad-color-picker {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	font-size: 12px;
+	color: #2e5278;
+}
+
+.wordpad-color-picker input {
+	width: 28px;
+	height: 24px;
+	border: 1px solid #9eb7d2;
+	background: #fff;
+	padding: 0;
+}
+
+.wordpad-page-wrap {
+	flex: 1;
+	min-height: 0;
+	overflow: auto;
+	padding: 14px;
+	background: #cfdbec;
+}
+
+.wordpad-page {
+	min-height: 100%;
+	max-width: 900px;
+	margin: 0 auto;
+	background: #fff;
+	border: 1px solid #d9d9d9;
+	box-shadow: 0 2px 12px #00000026;
+	padding: 18px;
+	outline: none;
+	font-size: 14px;
+	line-height: 1.5;
+	color: #1d1d1d;
+}
+
+.wordpad-status {
+	min-height: 24px;
+	padding: 4px 8px;
+	border-top: 1px solid #c8d4e3;
+	background: #eef3fa;
+	font-size: 11px;
+	color: #35506f;
+}
+
+@media (max-width: 700px) {
+	.wordpad-page-wrap {
+		padding: 8px;
+	}
+
+	.wordpad-page {
+		padding: 12px;
+		font-size: 13px;
+	}
+}

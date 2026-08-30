@@ -1,5 +1,3 @@
-function Computer() {
-  return <div className="app-container" />
-}
+import WindowsExplorer from './WindowsExplorer'
 
-export default Computer
+export default WindowsExplorer

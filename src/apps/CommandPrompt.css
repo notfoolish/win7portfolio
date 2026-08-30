@@ -1,0 +1,60 @@
+.cmd-app {
+  height: 100%;
+  background: var(--cmd-bg);
+  color: var(--cmd-fg);
+  border: 1px solid #2f2f2f;
+  display: flex;
+  flex-direction: column;
+  font-family: Consolas, 'Courier New', monospace;
+}
+
+.cmd-output {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: 8px;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.cmd-line {
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.cmd-line.command {
+  color: #f4f4f4;
+}
+
+.cmd-line.error {
+  color: #ff8585;
+}
+
+.cmd-input-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.cmd-prompt {
+  white-space: nowrap;
+  color: #f0f0f0;
+}
+
+.cmd-input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: var(--cmd-fg);
+  font: inherit;
+}
+
+@media (max-width: 640px) {
+  .cmd-output {
+    font-size: 12px;
+    padding: 6px;
+  }
+}

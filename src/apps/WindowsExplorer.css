@@ -1,0 +1,328 @@
+.explorer-app {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: #f5f9ff;
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+  font-size: 12px;
+  color: #1f2937;
+}
+
+.explorer-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 8px;
+  border-bottom: 1px solid #c8d8ee;
+  background: linear-gradient(to bottom, #fff 0%, #e8f1fd 100%);
+}
+
+.explorer-navbtn {
+  width: 28px;
+  height: 28px;
+  border: 1px solid #aac2e0;
+  background: linear-gradient(to bottom, #fff, #ddeafc);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  padding: 0;
+  font-size: 14px;
+  color: #2a4e7a;
+  font-weight: bold;
+}
+
+.explorer-navbtn:disabled {
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+.explorer-navbtn:hover:not(:disabled) {
+  border-color: #6aa0d8;
+  background: linear-gradient(to bottom, #e8f3ff, #c8dff7);
+}
+
+.explorer-address {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  overflow: hidden;
+  border: 1px solid #aac2e0;
+  border-radius: 3px;
+  background: #fff;
+  height: 26px;
+  padding: 0 4px;
+}
+
+.explorer-crumb-wrap {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
+.explorer-crumb {
+  border: none;
+  background: transparent;
+  padding: 0 4px;
+  font-size: 12px;
+  color: #1b4f8a;
+  white-space: nowrap;
+  max-width: 160px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.explorer-crumb:hover {
+  text-decoration: underline;
+}
+
+.explorer-sep {
+  color: #8aa4c4;
+  padding: 0 2px;
+  font-size: 11px;
+}
+
+.explorer-body {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 200px 1fr;
+}
+
+.explorer-sidebar {
+  border-right: 1px solid #c8d8ee;
+  background: #f0f6ff;
+  overflow-y: auto;
+  padding: 6px 4px;
+}
+
+.explorer-group {
+  margin-bottom: 4px;
+}
+
+.explorer-group h4 {
+  padding: 4px 8px 3px;
+  font-size: 10.5px;
+  font-weight: 700;
+  color: #5572a0;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.explorer-group ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.explorer-group button {
+  width: 100%;
+  text-align: left;
+  border: 1px solid transparent;
+  background: transparent;
+  border-radius: 3px;
+  font-size: 12px;
+  padding: 4px 10px;
+  color: #1f2937;
+}
+
+.explorer-group button:hover {
+  border-color: #a9cbf2;
+  background: linear-gradient(to bottom, #edf5ff, #dce8fa);
+}
+
+.explorer-group button.active {
+  border-color: #7ab0e8;
+  background: linear-gradient(to bottom, #ddeeff, #c8dcf5);
+  color: #0f3060;
+  font-weight: 600;
+}
+
+.explorer-content {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.explorer-columns {
+  display: grid;
+  grid-template-columns: minmax(200px, 2fr) 130px 130px 90px;
+  border-bottom: 1px solid #d8e6f3;
+  background: #f0f5fc;
+  flex-shrink: 0;
+}
+
+.explorer-columns span {
+  padding: 5px 8px;
+  font-size: 11px;
+  color: #5c6b7f;
+  border-right: 1px solid #e0ecfa;
+  font-weight: 600;
+}
+
+.explorer-list {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.explorer-row {
+  display: grid;
+  grid-template-columns: minmax(200px, 2fr) 130px 130px 90px;
+  border-bottom: 1px solid #eef3fb;
+  cursor: default;
+  user-select: none;
+}
+
+.explorer-row span {
+  padding: 6px 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.explorer-row:hover {
+  background: #e6f0ff;
+}
+
+.explorer-row.selected {
+  background: linear-gradient(to bottom, #d0e4ff, #bcd5f8);
+  border-color: #7aabeb;
+}
+
+.explorer-row-icon {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+  margin-right: 6px;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
+
+/* ── File preview (audio / image) ── */
+.explorer-file-preview {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  gap: 10px;
+  flex: 1;
+}
+
+.explorer-preview-img {
+  max-width: 100%;
+  max-height: 320px;
+  object-fit: contain;
+  border: 1px solid #d0dfee;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.12);
+  cursor: zoom-in;
+}
+
+.explorer-audio-icon {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+}
+
+.explorer-preview-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1b3a6a;
+  text-align: center;
+}
+
+.explorer-preview-sub {
+  font-size: 12px;
+  color: #6b7c99;
+}
+
+.explorer-audio-ctrl {
+  width: 100%;
+  max-width: 360px;
+}
+
+.explorer-empty {
+  padding: 16px;
+  color: #6b7280;
+  font-size: 12px;
+}
+
+/* ── Status bar ── */
+.explorer-statusbar {
+  border-top: 1px solid #c8d8ee;
+  background: linear-gradient(to bottom, #f0f6ff, #e4eefc);
+  padding: 3px 10px;
+  font-size: 11px;
+  color: #4b607c;
+  display: flex;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+
+.explorer-lightbox {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.78);
+  z-index: 10080;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.explorer-lightbox-inner {
+  max-width: 90vw;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border: 1px solid #b0c4e0;
+}
+
+.explorer-lightbox-inner img {
+  max-width: 100%;
+  max-height: calc(90vh - 48px);
+  object-fit: contain;
+  display: block;
+}
+
+.explorer-lightbox-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  border-top: 1px solid #d0dfee;
+  background: #f5f9ff;
+  font-size: 12px;
+  color: #2a4870;
+}
+
+.explorer-lightbox-bar button {
+  border: 1px solid #a8c0dc;
+  background: linear-gradient(to bottom, #eef4fc, #dae7f7);
+  padding: 4px 12px;
+  font-size: 12px;
+}
+
+@media (max-width: 600px) {
+  .explorer-body {
+    grid-template-columns: 1fr;
+  }
+  .explorer-sidebar {
+    display: none;
+  }
+  .explorer-columns,
+  .explorer-row {
+    grid-template-columns: 1fr 90px;
+  }
+  .explorer-columns span:nth-child(2),
+  .explorer-columns span:nth-child(3),
+  .explorer-row span:nth-child(2),
+  .explorer-row span:nth-child(3) {
+    display: none;
+  }
+}

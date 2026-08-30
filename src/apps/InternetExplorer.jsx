@@ -79,8 +79,8 @@ function InternetExplorer() {
   return (
     <div className="ie-app">
       <div className="ie-toolbar">
-        <button className="ie-btn" onClick={goBack} disabled={index <= 0}>◀</button>
-        <button className="ie-btn" onClick={goForward} disabled={index >= history.length - 1}>▶</button>
+        <button className="ie-btn" onClick={goBack} disabled={index <= 0}><img src="/win7icons/Shell32.dll/shell32_22.ico" alt="Back" style={{width:16,height:16,objectFit:'contain'}} /></button>
+        <button className="ie-btn" onClick={goForward} disabled={index >= history.length - 1}><img src="/win7icons/Shell32.dll/shell32_23.ico" alt="Forward" style={{width:16,height:16,objectFit:'contain'}} /></button>
         <button className="ie-btn" onClick={refresh}>↻</button>
         <button className="ie-btn" onClick={goHome}>Home</button>
 

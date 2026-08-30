@@ -142,32 +142,35 @@ process.on('SIGTERM', () => {
   process.exit(0)
 })
 
+let viceCity = null
+
 try {
-  const viceCity = await startViceCityServer()
+  viceCity = await startViceCityServer()
   children.push(viceCity)
+  console.log('Vice City backend started on http://127.0.0.1:8000')
+} catch (error) {
+  console.warn(error.message)
+  console.warn('Continuing with frontend only (Vice City app may be unavailable).')
+}
 
-  const vite = startVite()
-  children.push(vite)
+const vite = startVite()
+children.push(vite)
 
-  vite.on('error', (err) => {
-    console.error(`Failed to start Vite: ${err.message}`)
-    shutdown('SIGTERM')
-    process.exit(1)
-  })
+vite.on('error', (err) => {
+  console.error(`Failed to start Vite: ${err.message}`)
+  shutdown('SIGTERM')
+  process.exit(1)
+})
 
-  vite.on('exit', (code) => {
-    shutdown('SIGTERM')
-    process.exit(code ?? 0)
-  })
+vite.on('exit', (code) => {
+  shutdown('SIGTERM')
+  process.exit(code ?? 0)
+})
 
+if (viceCity) {
   viceCity.on('exit', (code) => {
     if (!shuttingDown) {
-      console.error(`Vice City backend stopped (code: ${code ?? 'unknown'}).`)
-      shutdown('SIGTERM')
-      process.exit(typeof code === 'number' ? code : 1)
+      console.warn(`Vice City backend stopped (code: ${code ?? 'unknown'}). Continuing frontend dev server.`)
     }
   })
-} catch (error) {
-  console.error(error.message)
-  process.exit(1)
 }

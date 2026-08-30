@@ -5,7 +5,17 @@ import './DesktopIcons.css'
 const CELL_W = 80   // grid cell width
 const CELL_H = 90   // grid cell height
 const PADDING = 10  // desktop edge padding
-const TASKBAR_H = 40
+
+function getTaskbarH() {
+  const raw = getComputedStyle(document.documentElement).getPropertyValue('--taskbar-height').trim()
+  return parseInt(raw, 10) || 40
+}
+function getCellDims() {
+  const style = getComputedStyle(document.documentElement)
+  const cw = parseInt(style.getPropertyValue('--desktop-cell-w').trim(), 10) || CELL_W
+  const ch = parseInt(style.getPropertyValue('--desktop-cell-h').trim(), 10) || CELL_H
+  return { cw, ch }
+}
 
 const ICONS_DEF = [
   { id: 'aboutme',  label: 'About Me',           icon: '/win7icons/Special Folders/imageres_129.ico',     appId: 'aboutme' },
@@ -17,9 +27,9 @@ const ICONS_DEF = [
 ]
 
 /* clamp to grid so the full icon stays on screen */
-function snapToGrid(x, y, maxCols, maxRows) {
-  let col = Math.round(x / CELL_W)
-  let row = Math.round(y / CELL_H)
+function snapToGrid(x, y, maxCols, maxRows, cw = CELL_W, ch = CELL_H) {
+  let col = Math.round(x / cw)
+  let row = Math.round(y / ch)
   col = Math.max(0, Math.min(col, maxCols - 1))
   row = Math.max(0, Math.min(row, maxRows - 1))
   return { col, row }
@@ -59,6 +69,7 @@ function DesktopIcons({ onAppOpen, selectionRect, suppressNextClear, onConsumeSu
   })
   const containerRef = useRef(null)
   const [gridSize, setGridSize] = useState({ cols: 1, rows: 1 })
+  const [cellDims, setCellDims] = useState({ cw: CELL_W, ch: CELL_H })
 
   useEffect(() => {
     if (!selectionRect || selectionRect.width < 3 || selectionRect.height < 3) return
@@ -76,10 +87,10 @@ function DesktopIcons({ onAppOpen, selectionRect, suppressNextClear, onConsumeSu
     const hits = ICONS_DEF
       .filter(icon => {
         const pos = positions[icon.id]
-        const left = hostRect.left + PADDING + pos.col * CELL_W
-        const top = hostRect.top + PADDING + pos.row * CELL_H
-        const right = left + CELL_W
-        const bottom = top + CELL_H
+        const left = hostRect.left + PADDING + pos.col * cellDims.cw
+        const top = hostRect.top + PADDING + pos.row * cellDims.ch
+        const right = left + cellDims.cw
+        const bottom = top + cellDims.ch
         return !(right < sel.left || left > sel.right || bottom < sel.top || top > sel.bottom)
       })
       .map(icon => icon.id)
@@ -87,19 +98,63 @@ function DesktopIcons({ onAppOpen, selectionRect, suppressNextClear, onConsumeSu
     setSelectedIds(hits)
   }, [selectionRect, positions])
 
-  /* recalc available grid on resize */
+  /* recalc available grid on resize — also re-pack icons that fall outside */
   useEffect(() => {
     const update = () => {
+      const taskbarH = getTaskbarH()
+      const { cw, ch } = getCellDims()
       const w = window.innerWidth  - PADDING * 2
-      const h = window.innerHeight - PADDING * 2 - TASKBAR_H
-      setGridSize({
-        cols: Math.max(1, Math.floor(w / CELL_W)),
-        rows: Math.max(1, Math.floor(h / CELL_H)),
+      const h = window.innerHeight - PADDING * 2 - taskbarH
+      const cols = Math.max(1, Math.floor(w / cw))
+      const rows = Math.max(1, Math.floor(h / ch))
+      setCellDims({ cw, ch })
+      setGridSize({ cols, rows })
+
+      // Clamp / re-pack any icons that are now out of bounds
+      setPositions(prev => {
+        const next = { ...prev }
+        const occupied = new Set(
+          Object.entries(next).map(([, p]) => `${p.col},${p.row}`)
+        )
+
+        for (const ic of ICONS_DEF) {
+          const p = next[ic.id]
+          if (!p) continue
+          // Already in bounds → nothing to do
+          if (p.col < cols && p.row < rows) continue
+
+          // Remove current occupancy
+          occupied.delete(`${p.col},${p.row}`)
+
+          // Find first free cell scanning column-first (top-to-bottom, left-to-right)
+          let placed = false
+          outer: for (let c = 0; c < cols; c++) {
+            for (let r = 0; r < rows; r++) {
+              if (!occupied.has(`${c},${r}`)) {
+                next[ic.id] = { col: c, row: r }
+                occupied.add(`${c},${r}`)
+                placed = true
+                break outer
+              }
+            }
+          }
+          // Fallback: squeeze into last cell if grid is fully packed
+          if (!placed) {
+            next[ic.id] = { col: cols - 1, row: rows - 1 }
+          }
+        }
+
+        return next
       })
     }
+
     update()
     window.addEventListener('resize', update)
-    return () => window.removeEventListener('resize', update)
+    window.addEventListener('orientationchange', () => setTimeout(update, 200))
+    return () => {
+      window.removeEventListener('resize', update)
+      window.removeEventListener('orientationchange', update)
+    }
   }, [])
 
   const moveIcon = useCallback((id, col, row) => {
@@ -159,10 +214,10 @@ function DesktopIcons({ onAppOpen, selectionRect, suppressNextClear, onConsumeSu
       if (!prev) return
 
       const movingIds = selectedIds.includes(item.id) ? selectedIds : [item.id]
-      const rawX = prev.col * CELL_W + delta.x
-      const rawY = prev.row * CELL_H + delta.y
+      const rawX = prev.col * cellDims.cw + delta.x
+      const rawY = prev.row * cellDims.ch + delta.y
 
-      const snapped = snapToGrid(rawX, rawY, gridSize.cols, gridSize.rows)
+      const snapped = snapToGrid(rawX, rawY, gridSize.cols, gridSize.rows, cellDims.cw, cellDims.ch)
       const dCol = snapped.col - prev.col
       const dRow = snapped.row - prev.row
 
@@ -203,10 +258,10 @@ function DesktopIcons({ onAppOpen, selectionRect, suppressNextClear, onConsumeSu
             className="desktop-icon-slot"
             style={{
               position: 'absolute',
-              left: PADDING + pos.col * CELL_W,
-              top:  PADDING + pos.row * CELL_H,
-              width: CELL_W,
-              height: CELL_H,
+              left: PADDING + pos.col * cellDims.cw,
+              top:  PADDING + pos.row * cellDims.ch,
+              width: cellDims.cw,
+              height: cellDims.ch,
             }}
           >
             <DeskIcon

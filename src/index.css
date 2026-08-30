@@ -5,6 +5,10 @@
 }
 
 :root {
+  --taskbar-height: 40px;
+  --desktop-icon-size: 48px;
+  --desktop-cell-w: 80px;
+  --desktop-cell-h: 90px;
   --cursor-default: url('/cursor/arrow.cur'), auto;
   --cursor-pointer: url('/cursor/link.cur'), pointer;
   --cursor-text: url('/cursor/text.cur'), text;
@@ -23,6 +27,15 @@ html,
 body,
 #root {
   cursor: var(--cursor-default);
+}
+
+@supports (height: 100dvh) {
+  html,
+  body,
+  #root {
+    height: 100dvh;
+    min-height: 100dvh;
+  }
 }
 
 :where(button, [role='button'], a, summary, select, label[for], input[type='checkbox'], input[type='radio']) {
@@ -44,6 +57,16 @@ body,
 
 :where([disabled], [aria-disabled='true']) {
   cursor: var(--cursor-not-allowed) !important;
+}
+
+/* ── Landscape on small screens (phones) ── */
+@media (orientation: landscape) and (max-height: 500px) {
+  :root {
+    --taskbar-height: 32px;
+    --desktop-icon-size: 32px;
+    --desktop-cell-w: 64px;
+    --desktop-cell-h: 68px;
+  }
 }
 
 body {

@@ -55,3 +55,19 @@
   line-height: 1.4;
   color: #2d5077;
 }
+
+@media (max-width: 560px) {
+  .games-app {
+    padding: 8px;
+    gap: 8px;
+  }
+
+  .games-header {
+    font-size: 14px;
+  }
+
+  .games-subtitle,
+  .games-item-reason {
+    font-size: 11px;
+  }
+}

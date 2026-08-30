@@ -11,12 +11,12 @@ export const APPS = {
   explorer: {
     appId: 'explorer', title: 'Windows Explorer',
     icon: '/win7icons/Standard Folders/imageres_3.ico',
-    single: true, width: 720, height: 500,
+    single: true, width: 760, height: 520,
   },
   wmp: {
     appId: 'wmp', title: 'Windows Media Player',
     icon: '/win7icons/WMP12 Icons/WMP 12 1.ico',
-    single: true, width: 720, height: 500,
+    single: true, width: 820, height: 560,
   },
   wordpad: {
     appId: 'wordpad', title: 'WordPad',
@@ -51,7 +51,7 @@ export const APPS = {
   pics: {
     appId: 'pics', title: 'Pictures',
     icon: '/win7icons/Libraries/imageres_1003.ico',
-    single: true, width: 720, height: 500,
+    single: true, width: 860, height: 600,
   },
   music: {
     appId: 'music', title: 'Music',
@@ -87,11 +87,6 @@ export const APPS = {
     appId: 'devices', title: 'Devices and Printers',
     icon: '/win7icons/Control Panel/imageres_78.ico',
     single: true, width: 720, height: 500,
-  },
-  defaults: {
-    appId: 'defaults', title: 'Default Programs',
-    icon: '/win7icons/Default Programs/cmd_IDI_APPICON.ico',
-    single: true, width: 620, height: 450,
   },
   help: {
     appId: 'help', title: 'Help and Support',
